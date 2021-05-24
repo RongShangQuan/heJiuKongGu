@@ -53,7 +53,7 @@ input[type="button"], input[type="submit"], input[type="reset"] {-webkit-appeara
 
 
 .header .header_content {width:1000px;margin:auto;position:relative;}
-.header .header_content .header_logo { display:block;width:235px;height:90px; background:url(../images/logo.png) left top no-repeat ; float:left;}
+.header .header_content .header_logo { display:block;width:235px;height:90px; background:url(../images/logo.png) no-repeat;background-size:cover;background-position:center; float:left;}
 .header .header_nav {height:90px;display:block; float:right;width:660px;height:90px; text-align:right; position:relative; }
 .header .header_nav * {-webkit-transition:all .5s ease;-moz-transition:all .5s ease;transition:all .5s ease;}
 .header .header_nav li {width:110px;height:90px;position:relative !important;background: url(../images/yline1.jpg) right center no-repeat; float:left;}
@@ -377,6 +377,34 @@ input[type="button"], input[type="submit"], input[type="reset"] {-webkit-appeara
  .ed_item_content{
  	font-size: 1.15em;
 	line-height: 1.5em;
+ }
+ 
+ 
+ /* about_hr - style
+  *	关联公司 追加样式
+  */
+ .logoContext{
+ 	height: 200px;
+ }
+ 
+ #issues li{
+  	background-color: #ffffff;
+  	margin: 10px 0px;
+ }
+ 
+ #issues img{
+ 	display:inline;
+ 	width: 200px;
+ 	height: 200px;
+ }
+ 
+ #issues span{
+ 	width: calc(100% - 300px);
+ 	font-size:1.2em;
+ 	line-height:1.4em;
+ 	padding-top: 50px;
+ 	padding-left: 50px;
+ 	padding-right: 10px;
  }
  
  /*- end -*/
