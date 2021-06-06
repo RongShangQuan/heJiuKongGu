@@ -63,43 +63,100 @@ function GetImageUrl(name) {
 /**
  * dynamic_news.html
  */
+//每页数量、返回数据总数、应建页数、当前页
+const pageSize = 1;
+var valLength = 0;
+var pages = 0;
+var thisPage = 1;
+
+// 页数内容：开始部分、中间、结尾
+var pageHtmlStart = "";
+var pageHtmlBody = "";
+var pageHtmlEnd = "";
+
+// 新闻内容
+var newsHtml = "";
+
+// 返回的数据
+var NewsDatas = null;
+
 function GetNews() {
-	$
-			.ajax({
-				headers : {
-					"Authorization" : localStorage.getItem("Bearer ")
-				// 此处放置请求到的用户token
-				},
-				url : "http://3st8469753.wicp.vip/api/content/getNews",
-				type : 'post',
-				contentType : "application/json",
-				dataType : 'json',
-				cache : false,
-				async : false,
-				// beforeSend: function (XMLHttpRequest) {
-				// XMLHttpRequest.setRequestHeader("Authorization",
-				// localStorage.getItem("mytoken"));
-				// },
-				success : function(res) {
-//					console.log("res_" + JSON.stringify(res));
-					if (res.code === 200) {
-						// localStorage.setItem("news_content", res.data[0]);
-						// window.location.href = "dynamic_news_show.html";
-						var htmlVal = "";
-						for (var i = 0;i < res.data.length;i++) {
-							var item = res.data[i];
-							htmlVal += '<a href="###">'
-									+ '<img src="' + item.thumbnail + '">'
-									+ '<span>' + '	<h1>' + item.title + '</h1>'
-									+ '	<h2>' + item.content + '</h2>'
-									+ '	<h3>' + item.createTime + '</h3>'
-									+ '</span></a>';
-						}
-						jQuery("#issues li").html(htmlVal);
-					}
-				},
-				error : function() {
-					alert("GetNewsContent error!");
+	$.ajax({
+		headers : {
+			"Authorization" : localStorage.getItem("Bearer ")
+		// 此处放置请求到的用户token
+		},
+		url : "http://3st8469753.wicp.vip/api/content/getNews",
+		type : 'post',
+		contentType : "application/json",
+		dataType : 'json',
+		cache : false,
+		async : false,
+		// beforeSend: function (XMLHttpRequest) {
+		// XMLHttpRequest.setRequestHeader("Authorization",
+		// localStorage.getItem("mytoken"));
+		// },
+		success : function(res) {
+			if (res.code === 200) {
+				// 接收数据
+				NewsDatas = res.data;
+				
+				// 返回数据总数、应建页数
+				valLength = res.data.length;
+				pages = valLength % pageSize != 0 ? valLength / pageSize + 1 : valLength / pageSize;
+				
+				// 创建页数内容
+				pageHtmlStart = "<li onclick='LoadNews(1)'>首页</li>" +
+						"<li onclick='LoadUpNews()'>上一页</li>";
+				pageHtmlBody = "";
+				pageHtmlEnd = "<li onclick='LoadDownNews()'>下一页</li>" +
+						"<li onclick='LoadNews(" + pages + ")'>末页</li>";
+				
+				for(var i = 1;i <= pages;i++){
+					pageHtmlBody += "<li data-index='" + i + "' onclick='LoadNews(" + i + ")'>" + i + "</li>";
 				}
-			});
+				
+				jQuery("#page_content").html(pageHtmlStart + pageHtmlBody + pageHtmlEnd);
+				
+				// 载入新闻
+				LoadNews(thisPage);
+			}
+		},
+		error : function() {
+			alert("GetNewsContent error!");
+		}
+	});
+}
+
+function LoadNews(newsPage){
+	// 记录页
+	thisPage = newsPage;
+	
+	// 加入内容
+	newsHtml = "";
+	
+	// 载入下标、终止位置
+	var newsIndex = pageSize == 1 ? thisPage - 1 : newsPage - 1 < 0 ? 0 : (newsPage - 1) * pageSize - 1 < 0 ? 0 : (newsPage - 1) * pageSize - 1;
+	var newsEndIndex = newsIndex + pageSize > valLength ? valLength : newsIndex + pageSize;
+	
+	for (var i = newsIndex;i < newsEndIndex;i++) {
+		var item = NewsDatas[i];
+		newsHtml += '<a href="###">' + '<img src="' + item.thumbnail
+				+ '">' + '<span>' + '	<h1>' + item.title + '</h1>'
+				+ '	<h2>' + item.content + '</h2>' + '	<h3>'
+				+ item.createTime + '</h3>' + '</span></a>';
+	}
+	jQuery("#issues li").html(newsHtml);
+	
+	// 修改样式
+	jQuery("#page_content li[class='cur']").removeClass("cur");
+	jQuery("#page_content li[data-index='" + thisPage + "']").addClass("cur");
+}
+
+function LoadUpNews(){
+	LoadNews(thisPage - 1 == 0 ? pages : thisPage - 1);
+}
+
+function LoadDownNews(){
+	LoadNews(thisPage + 1 > pages ? 1 : thisPage + 1);
 }

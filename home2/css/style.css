@@ -600,11 +600,11 @@ input.yzm_btn3{right:37%!important; top:7px !important;}
 
 
 
-.page_turn { margin-top:30px; padding-top:20px; overflow:hidden; width:100%; text-align:center; border-top:#CCC 1px solid; clear:both;}
+.page_turn {margin-top:30px; padding-top:20px; overflow:hidden; width:100%; text-align:center; border-top:#CCC 1px solid; clear:both;}
 
-.page_turn a{display:inline-block;*display:-moz-inline-stack;zoom:1;*display:inline; border:#CCC 1px solid; padding:5px 10px; margin:2px; font-size:14px}
+.page_turn li{cursor:pointer;display:inline-block;*display:-moz-inline-stack;zoom:1;*display:inline; border:#CCC 1px solid; padding:5px 10px; margin:2px; font-size:14px}
 
-.page_turn a:hover,.page_turn a.cur { background:#b39666; color:#FFF;}
+.page_turn li:hover,.page_turn li.cur { background:#b39666; color:#FFF;}
 
 
 
