@@ -143,8 +143,7 @@ function LoadNews(newsPage){
 		var item = NewsDatas[i];
 		newsHtml += '<a href="###">' + '<img src="' + item.thumbnail
 				+ '">' + '<span>' + '	<h1>' + item.title + '</h1>'
-				+ '	<h2>' + item.content + '</h2>' + '	<h3>'
-				+ item.createTime + '</h3>' + '</span></a>';
+				+ '	<h3>' + item.createTime + '</h3>' + '</span></a>';
 	}
 	jQuery("#issues li").html(newsHtml);
 	
@@ -159,4 +158,42 @@ function LoadUpNews(){
 
 function LoadDownNews(){
 	LoadNews(thisPage + 1 > pages ? 1 : thisPage + 1);
+}
+
+
+function GetNotice() {
+	$.ajax({
+		headers : {
+			"Authorization" : localStorage.getItem("Bearer ")
+		// 此处放置请求到的用户token
+		},
+		url : "http://p38r469753.eicp.vip/api/message/queryNewMessage?page=0&size=10&sort=id,desc",
+		type : 'get',
+		contentType : "application/json",
+		dataType : 'json',
+		cache : false,
+		async : false,
+		// beforeSend: function (XMLHttpRequest) {
+		// XMLHttpRequest.setRequestHeader("Authorization",
+		// localStorage.getItem("mytoken"));
+		// },
+		success : function(res) {
+			if (res.code === 200) {
+				var datas = res.data.content;
+				var htmlVal = '';
+				for(var i = 0;i < datas.length;i++){
+					htmlVal += "<li><a href='###'>" +
+							"<img src='" + datas[i].imageUrl + "'></a>" +
+							"<span class='cover'></span><div class='info'>" +
+							"<a href='###'>" + datas[i].title
+							"</a></div></li>";
+				}
+				
+				jQuery("#panle").html(htmlVal);
+			}
+		},
+		error : function() {
+			alert("GetNotice error!");
+		}
+	});
 }
