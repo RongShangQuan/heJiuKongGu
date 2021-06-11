@@ -64,7 +64,7 @@ function GetImageUrl(name) {
  * dynamic_news.html
  */
 //每页数量、返回数据总数、应建页数、当前页
-const pageSize = 1;
+const pageSize = 2;
 var valLength = 0;
 var pages = 0;
 var thisPage = 1;
@@ -81,6 +81,33 @@ var newsHtml = "";
 var NewsDatas = null;
 
 function GetNews() {
+	// 接收数据
+	NewsDatas = GetNewsJson();
+	
+	// 返回数据总数、应建页数
+	valLength = NewsDatas.length;
+//	pages = valLength % pageSize != 0 ? Math.ceil(valLength / pageSize) : valLength / pageSize;
+	pages = Math.ceil(valLength / pageSize)
+	
+	// 创建页数内容
+	pageHtmlStart = "<li onclick='LoadNews(1)'>首页</li>" +
+			"<li onclick='LoadUpNews()'>上一页</li>";
+	pageHtmlBody = "";
+	pageHtmlEnd = "<li onclick='LoadDownNews()'>下一页</li>" +
+			"<li onclick='LoadNews(" + pages + ")'>末页</li>";
+	
+	for(var i = 1;i <= pages;i++){
+		pageHtmlBody += "<li data-index='" + i + "' onclick='LoadNews(" + i + ")'>" + i + "</li>";
+	}
+	
+	jQuery("#page_content").html(pageHtmlStart + pageHtmlBody + pageHtmlEnd);
+	
+	// 载入新闻
+	LoadNews(thisPage);
+}
+
+function GetNewsJson() {
+	var rtnData = "null";
 	$.ajax({
 		headers : {
 			"Authorization" : localStorage.getItem("Bearer ")
@@ -98,34 +125,15 @@ function GetNews() {
 		// },
 		success : function(res) {
 			if (res.code === 200) {
-				// 接收数据
-				NewsDatas = res.data;
-				
-				// 返回数据总数、应建页数
-				valLength = res.data.length;
-				pages = valLength % pageSize != 0 ? valLength / pageSize + 1 : valLength / pageSize;
-				
-				// 创建页数内容
-				pageHtmlStart = "<li onclick='LoadNews(1)'>首页</li>" +
-						"<li onclick='LoadUpNews()'>上一页</li>";
-				pageHtmlBody = "";
-				pageHtmlEnd = "<li onclick='LoadDownNews()'>下一页</li>" +
-						"<li onclick='LoadNews(" + pages + ")'>末页</li>";
-				
-				for(var i = 1;i <= pages;i++){
-					pageHtmlBody += "<li data-index='" + i + "' onclick='LoadNews(" + i + ")'>" + i + "</li>";
-				}
-				
-				jQuery("#page_content").html(pageHtmlStart + pageHtmlBody + pageHtmlEnd);
-				
-				// 载入新闻
-				LoadNews(thisPage);
+				// 返回数据
+				rtnData = res.data;
 			}
 		},
 		error : function() {
-			alert("GetNewsContent error!");
+			rtnData = "error";
 		}
 	});
+	return rtnData;
 }
 
 function LoadNews(newsPage){
@@ -136,12 +144,12 @@ function LoadNews(newsPage){
 	newsHtml = "";
 	
 	// 载入下标、终止位置
-	var newsIndex = pageSize == 1 ? thisPage - 1 : newsPage - 1 < 0 ? 0 : (newsPage - 1) * pageSize - 1 < 0 ? 0 : (newsPage - 1) * pageSize - 1;
+	var newsIndex = pageSize == 1 ? thisPage - 1 : newsPage - 1 < 0 ? 0 : (newsPage - 1) * pageSize < 0 ? 0 : (newsPage - 1) * pageSize;
 	var newsEndIndex = newsIndex + pageSize > valLength ? valLength : newsIndex + pageSize;
 	
 	for (var i = newsIndex;i < newsEndIndex;i++) {
 		var item = NewsDatas[i];
-		newsHtml += '<a href="###">' + '<img src="' + item.thumbnail
+		newsHtml += '<a href="###" onclick="OpenNewsPage(' + i + ')">' + '<img src="' + item.thumbnail
 				+ '">' + '<span>' + '	<h1>' + item.title + '</h1>'
 				+ '	<h3>' + item.createTime + '</h3>' + '</span></a>';
 	}
@@ -158,6 +166,12 @@ function LoadUpNews(){
 
 function LoadDownNews(){
 	LoadNews(thisPage + 1 > pages ? 1 : thisPage + 1);
+}
+
+function OpenNewsPage(index){
+	console.log(index);
+	localStorage.setItem("OpenNewsIndex", index);
+	window.open("dynamic_news_show.html","_blank");
 }
 
 
@@ -178,6 +192,7 @@ function GetNotice() {
 		// localStorage.getItem("mytoken"));
 		// },
 		success : function(res) {
+
 			if (res.code === 200) {
 				var datas = res.data.content;
 				var htmlVal = '';

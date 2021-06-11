@@ -110,31 +110,23 @@
 			</div>
 			<div id="news_content" class="life_study_detail pt40">
 				<div class="life_study_detail_title">
-					<h1>小米造车隔山海，老贾孤注博出圈！</h1>
-					<h2>2021-02-25 来源：</h2>
+					<h1></h1>
+					<h2></h2>
 				</div>
+				<div class="detail_content" >
+					
+				</div>
+				<!-- <p style="border:0px;margin-top:0.63em;margin-bottom:1.8em;padding:0px;font-size:16px;counter-reset:list-1 0 list-2 0 list-3 0 list-4 0 list-5 0 list-6 0 list-7 0 list-8 0 list-9 0;color:#191919;font-family:"
+					white-space:normal;background-color:#ffffff;"=""></p>
 				<p
 					style="border:0px;margin-top:0.63em;margin-bottom:1.8em;padding:0px;font-size:16px;counter-reset:list-1 0 list-2 0 list-3 0 list-4 0 list-5 0 list-6 0 list-7 0 list-8 0 list-9 0;color:#191919;font-family:"
 					white-space:normal;background-color:#ffffff;"="">
-					小米造车隔山海，山海难平。<br />互联网科技公司可谓在汽车圈刷足了存在感，从苹果的入局到百度的下场，从华为的传闻到小米的“有讨论，未立项”，新造车势力可谓风云扰动，硝烟如云。
-				</p>
-				<p
-					style="border:0px;margin-top:0.63em;margin-bottom:1.8em;padding:0px;font-size:16px;counter-reset:list-1 0 list-2 0 list-3 0 list-4 0 list-5 0 list-6 0 list-7 0 list-8 0 list-9 0;color:#191919;font-family:"
-					white-space:normal;background-color:#ffffff;"="">
-					<a
-						href="http://mp.weixin.qq.com/s?__biz=MjM5MjMwODc5Mw==&mid=2650340288&idx=1&sn=f907c495a1ded109b32e7fe032ece256&chksm=bea4109689d39980c1a44ddc9d67311be6d67f3ceb343e57d0f34c4fdb83d3db03b9efd1c484&token=728537866&lang=zh_CN#rd"
-						target="_blank">【点击查看原文链接】</a>
-				</p>
-				<p
-					style="border:0px;margin-top:0.63em;margin-bottom:1.8em;padding:0px;font-size:16px;counter-reset:list-1 0 list-2 0 list-3 0 list-4 0 list-5 0 list-6 0 list-7 0 list-8 0 list-9 0;color:#191919;font-family:"
-					white-space:normal;background-color:#ffffff;"="">
-					<br />
+					<br /> -->
 				</p>
 			</div>
 			<div class="page_next">
 				<a href="dynamic_news_show.html">上一篇：双雄争霸—光伏大硅片尺寸混战，谁的天下？</a><a
-					href="dynamic_news_show.html">下一篇：老牌私募罕见重磅发声：未来3-6个月，机会大于风险！</a><a
-					href="javascript:history.go(-1);" class="rt_btn">返回</a>
+					href="dynamic_news_show.html">下一篇：老牌私募罕见重磅发声：未来3-6个月，机会大于风险！</a>
 			</div>
 		</div>
 		<div class="page_bottom"></div>
@@ -231,5 +223,20 @@
 	<script type="text/javascript" src="js/jquery.placeholder.js"></script>
 	<script type="text/javascript" src="js/tokenConfig.js"></script>
 	<script type="text/javascript" src="js/images_dynamic_news.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function(){
+			var index = localStorage.getItem("OpenNewsIndex");
+			if(index == "" || index == null){
+				window.location.href = "dynamic_news.html";
+			}
+			
+			var datas = GetNewsJson();
+			document.title = datas[index].title;
+			jQuery(".life_study_detail_title h1").html(datas[index].title);
+			jQuery(".life_study_detail_title h2").html(datas[index].createTime);
+			
+			jQuery(".detail_content").html(datas[index].content);
+		});
+	</script>
 </body>
 </html>
